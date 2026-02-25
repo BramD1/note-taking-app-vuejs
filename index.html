@@ -20,11 +20,11 @@ Open this file in your browser to run the app.
 <body>
     <div id="app" class="app">
         <h1>Note Taking App</h1>
-        <h2>By Bramantyo</h2>
+        <p>By Bramantyo</p>
 
         <!-- Add new task: prevents empty entries with simple validation -->
         <form @submit.prevent="addTask">
-            <input type="text" placeholder="Add a new task..." v-model="newTask" @keyup.enter="addTask" aria-label="New task" />
+            <input type="text" placeholder="Add a new task/note..." v-model="newTask" @keyup.enter="addTask" aria-label="New task" />
             <button type="submit">Add</button>
         </form>
 
@@ -42,7 +42,7 @@ Open this file in your browser to run the app.
         <div class="meta">Remaining: {{ remaining }} — Total: {{ tasks.length }}</div>
     </div>
 
-    <!-- Vue 3 (global build) -->
+    <!-- Start of Vue scripting-->
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <script>
         // Create Vue app. Data contains `newTask` (input) and `tasks` array.
