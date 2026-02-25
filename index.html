@@ -22,24 +22,34 @@ Open this file in your browser to run the app.
         <h1>Note Taking App</h1>
         <p>By Bramantyo</p>
 
-        <!-- Add new task: prevents empty entries with simple validation -->
-        <form @submit.prevent="addTask">
-            <input type="text" placeholder="Add a new task/note..." v-model="newTask" @keyup.enter="addTask" aria-label="New task" />
-            <button type="submit">Add</button>
-        </form>
+        <!-- Input area (separated) -->
+        <div class="input-area">
+            <!-- Add new task: prevents empty entries with simple validation -->
+            <form @submit.prevent="addTask">
+                <input type="text" placeholder="Add a new task/note..." v-model="newTask" @keyup.enter="addTask" aria-label="New task" />
+                <button type="submit">Add</button>
+            </form>
+        </div>
 
-        <!-- Task list -->
-        <ul>
-            <li v-for="(task, index) in tasks" :key="task.id" :class="task.completed ? 'completed' : 'pending'">
-                <input type="checkbox" :checked="task.completed" @change="toggleComplete(task)" aria-label="Mark complete" />
-                <span style="flex:1">{{ task.title }}</span>
-                <button class="delete" @click="deleteTask(index)">Delete</button>
-            </li>
-        </ul>
+        <!-- List area (separate container for tasks) -->
+        <div class="list-area">
+            <!-- Task list -->
+            <ul>
+                <li v-for="(task, index) in tasks" :key="task.id" :class="task.completed ? 'completed' : 'pending'">
+                    <input type="checkbox" :checked="task.completed" @change="toggleComplete(task)" aria-label="Mark complete" />
+                    <span style="flex:1">{{ task.title }}</span>
+                    <div class="move-controls">
+                      <button class="move-btn" @click="moveUp(index)" :disabled="index===0" aria-label="Move up">▲</button>
+                      <button class="move-btn" @click="moveDown(index)" :disabled="index===tasks.length-1" aria-label="Move down">▼</button>
+                    </div>
+                    <button class="delete" @click="deleteTask(index)">Delete</button>
+                </li>
+            </ul>
 
-        <div v-if="tasks.length === 0" class="empty">No tasks yet — add your first task!</div>
+            <div v-if="tasks.length === 0" class="empty">No tasks yet — add your first task!</div>
 
-        <div class="meta">Remaining: {{ remaining }} — Total: {{ tasks.length }}</div>
+            <div class="meta">Remaining: {{ remaining }} — Total: {{ tasks.length }}</div>
+        </div>
     </div>
 
     <!-- Start of Vue scripting-->
@@ -52,7 +62,8 @@ Open this file in your browser to run the app.
             data() {
                 return {
                     newTask: '',
-                    tasks: []
+                    tasks: [],
+                    // no drag state; using moveUp/moveDown instead
                 }
             },
             created() {
@@ -76,6 +87,22 @@ Open this file in your browser to run the app.
                 // Toggle the completed state of a task and persist
                 toggleComplete(task) {
                     task.completed = !task.completed;
+                    this.saveTasks();
+                },
+                // Move item up by swapping with previous entry
+                moveUp(index) {
+                    if (index <= 0) return;
+                    // remove the item and re-insert it before the previous item
+                    const item = this.tasks.splice(index, 1)[0];
+                    this.tasks.splice(index - 1, 0, item);
+                    this.saveTasks();
+                },
+                // Move item down by swapping with next entry
+                moveDown(index) {
+                    if (index >= this.tasks.length - 1) return;
+                    // remove the item and re-insert it after the next item
+                    const item = this.tasks.splice(index, 1)[0];
+                    this.tasks.splice(index + 1, 0, item);
                     this.saveTasks();
                 },
                 // Delete a task by index and persist

@@ -1,6 +1,5 @@
-/* Styles for the Simple Vue To-Do List app
-
-   Moved from index.html to keep markup clean.
+/* Simple, clean theme — easy to read and minimal.
+   Separated input and list areas for clarity.
 */
 body {
   font-family:
@@ -10,26 +9,40 @@ body {
     Roboto,
     "Helvetica Neue",
     Arial;
-  background: #51555a;
+  background: #f6f8fa;
   margin: 0;
   padding: 40px;
+  color: #0f1722;
 }
 .app {
   max-width: 520px;
   margin: 0 auto;
-  background: rgb(110, 98, 98);
+  background: #ffffff;
   padding: 24px;
   border-radius: 8px;
-  box-shadow: 0 6px 18px rgba(129, 66, 66, 0.06);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
 h1 {
-  margin: 0 0 12px 0;
+  margin: 0 0 6px 0;
   font-size: 20px;
+}
+p {
+  margin: 0 0 12px 0;
+  color: #475569;
+}
+
+/* Input area separated visually */
+.input-area {
+  padding: 12px;
+  background: #fbfdff;
+  border-radius: 8px;
+  border: 1px solid #eef2f7;
+  margin-bottom: 14px;
 }
 form {
   display: flex;
   gap: 8px;
-  margin-bottom: 16px;
+  margin: 0;
 }
 input[type="text"] {
   flex: 1;
@@ -42,13 +55,22 @@ button {
   padding: 10px 12px;
   border-radius: 6px;
   border: 0;
-  background: #57f63b;
+  background: #3b82f6;
   color: white;
   font-weight: 600;
   cursor: pointer;
 }
 button.delete {
   background: #ef4444;
+}
+
+/* List area separated */
+.list-area {
+  padding: 14px;
+  margin-top: 10px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
 }
 ul {
   list-style: none;
@@ -62,8 +84,6 @@ li {
   padding: 10px;
   border-radius: 6px;
   margin-bottom: 8px;
-}
-li.pending {
   background: linear-gradient(180deg, #ffffff, #fbfdff);
 }
 li.completed {
@@ -73,11 +93,28 @@ li.completed {
 }
 .meta {
   margin-top: 12px;
-  color: #050b1e;
+  color: #6b7280;
   font-size: 13px;
 }
 .empty {
-  color: #121314;
+  color: #9ca3af;
   text-align: center;
   padding: 18px;
+}
+
+/* simple checkbox */
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+/* Move controls */
+.move-controls { display:inline-flex; flex-direction:column; gap:4px; margin-right:8px }
+.move-btn { border:0; background:#f1f5f9; padding:6px 8px; border-radius:6px; cursor:pointer }
+.move-btn:disabled { opacity:0.45; cursor:not-allowed }
+
+@media (max-width: 520px) {
+  .app {
+    padding: 18px;
+  }
 }
