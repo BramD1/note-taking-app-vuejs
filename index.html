@@ -1,0 +1,113 @@
+<!--
+Simple Vue 3 To-Do List App
+
+Features:
+- Add tasks (prevents empty tasks)
+- Mark tasks completed
+- Delete tasks
+- Persist tasks to localStorage
+
+Open this file in your browser to run the app.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Vue To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" class="app">
+        <h1>Note Taking App</h1>
+        <h2>By Bramantyo</h2>
+
+        <!-- Add new task: prevents empty entries with simple validation -->
+        <form @submit.prevent="addTask">
+            <input type="text" placeholder="Add a new task..." v-model="newTask" @keyup.enter="addTask" aria-label="New task" />
+            <button type="submit">Add</button>
+        </form>
+
+        <!-- Task list -->
+        <ul>
+            <li v-for="(task, index) in tasks" :key="task.id" :class="task.completed ? 'completed' : 'pending'">
+                <input type="checkbox" :checked="task.completed" @change="toggleComplete(task)" aria-label="Mark complete" />
+                <span style="flex:1">{{ task.title }}</span>
+                <button class="delete" @click="deleteTask(index)">Delete</button>
+            </li>
+        </ul>
+
+        <div v-if="tasks.length === 0" class="empty">No tasks yet — add your first task!</div>
+
+        <div class="meta">Remaining: {{ remaining }} — Total: {{ tasks.length }}</div>
+    </div>
+
+    <!-- Vue 3 (global build) -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script>
+        // Create Vue app. Data contains `newTask` (input) and `tasks` array.
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    newTask: '',
+                    tasks: []
+                }
+            },
+            created() {
+                // Load saved tasks from localStorage when app starts
+                this.loadTasks();
+            },
+            methods: {
+                // Add a new task (prevents empty strings)
+                addTask() {
+                    const title = (this.newTask || '').trim();
+                    if (!title) {
+                        // Simple silent validation — you can replace with user feedback
+                        this.newTask = '';
+                        return;
+                    }
+                    // Push a new task object with a unique id and completed flag
+                    this.tasks.push({ id: Date.now(), title, completed: false });
+                    this.newTask = '';
+                    this.saveTasks();
+                },
+                // Toggle the completed state of a task and persist
+                toggleComplete(task) {
+                    task.completed = !task.completed;
+                    this.saveTasks();
+                },
+                // Delete a task by index and persist
+                deleteTask(index) {
+                    this.tasks.splice(index, 1);
+                    this.saveTasks();
+                },
+                // Save tasks to localStorage as JSON
+                saveTasks() {
+                    try {
+                        localStorage.setItem('vue-todo-list', JSON.stringify(this.tasks));
+                    } catch (e) {
+                        console.error('Failed to save tasks', e);
+                    }
+                },
+                // Load tasks from localStorage (if present)
+                loadTasks() {
+                    try {
+                        const raw = localStorage.getItem('vue-todo-list');
+                        if (raw) this.tasks = JSON.parse(raw);
+                    } catch (e) {
+                        console.error('Failed to load tasks', e);
+                    }
+                }
+            },
+            computed: {
+                // Number of remaining (not completed) tasks
+                remaining() {
+                    return this.tasks.filter(t => !t.completed).length;
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
