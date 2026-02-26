@@ -14,13 +14,13 @@ Open this file in your browser to run the app.
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Vue To-Do List</title>
+    <title>To-Do List App</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="app" class="app">
         <h1>Note Taking App</h1>
-        <p>By Bramantyo</p>
+        <p>Let's get things done!</p>
 
         <!-- Input area (separated) -->
         <div class="input-area">
@@ -89,18 +89,16 @@ Open this file in your browser to run the app.
                     task.completed = !task.completed;
                     this.saveTasks();
                 },
-                // Move item up by swapping with previous entry
+                // Move item up by removing and re-inserting before previous
                 moveUp(index) {
                     if (index <= 0) return;
-                    // remove the item and re-insert it before the previous item
                     const item = this.tasks.splice(index, 1)[0];
                     this.tasks.splice(index - 1, 0, item);
                     this.saveTasks();
                 },
-                // Move item down by swapping with next entry
+                // Move item down by removing and re-inserting after next
                 moveDown(index) {
                     if (index >= this.tasks.length - 1) return;
-                    // remove the item and re-insert it after the next item
                     const item = this.tasks.splice(index, 1)[0];
                     this.tasks.splice(index + 1, 0, item);
                     this.saveTasks();
